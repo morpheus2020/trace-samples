@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+  annotations:
+    "forge.io/template-args": "4gen -n web -fr exit-http:apache"
+spec:
+  selector:
+    matchLabels:
+      app: web
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+        - name: forge-app
+          image: morpheus2020/forge-server
+          imagePullPolicy: Always
+          env:
+            - name: FR_FEATURES
+              value: exit-http:apache,gateway-jetty
+          ports:
+            - containerPort: 7070
+              name: jetty
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  annotations:
+    "forge.io/template-args": "4gen -n web -fr exit-http:apache"
+spec:
+  type: ClusterIP
+  selector:
+    app: web
+  ports:
+    - port: 7070
+      targetPort: jetty
