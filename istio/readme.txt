@@ -48,5 +48,5 @@ kubectl patch deployment.apps/istio-ingressgateway \
 
 kubectl rollout restart deployment istio-ingressgateway -n istio-system
 
-5.
+5. Setup and run the Sample App
 ./setup-sample-app.sh
